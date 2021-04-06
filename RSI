@@ -1,0 +1,41 @@
+def RSI(x):
+    adj_close=data["Adj Close"].to_numpy()
+    changes=[]
+    Up=[]
+    Down=[]
+    for i in range(0,len(adj_close)-1):
+        change=np.around((adj_close[i+1]-adj_close[i]),2)
+        changes.append(change)
+        i=i+1
+    for i in range(0,len(changes)):
+        g_l=changes[i]
+        if g_l>0:
+            Up.append(g_l)
+            Down.append(0)
+        else:
+            Down.append(abs(g_l))
+            Up.append(0)
+        i=i+1
+    avg_U=np.around(m_average(Up,x),2)
+    avg_D=np.around(m_average(Down,x),2)
+    RSI=[]
+    for i in range(0,len(avg_D)-1):
+        rs=avg_U[i]/avg_D[i]
+        rsi=100-(100/(1+rs))
+        RSI.append(rsi)
+        i=i+1
+    gs=gridspec.GridSpec(6,1)
+    price=plt.subplot(gs[:-1,:])
+    price.plot(data.index,data.iloc[:,4])
+    RSI_plot=plt.subplot(gs[5,:])
+    Over_B=plt.subplot(gs[5,:])
+    Over_S=plt.subplot(gs[5,:])
+    RSI_plot.plot(data.index[:len(RSI)],RSI, color="g")
+    Over_S.plot(data.index[:len(RSI)],np.full(np.shape(RSI), 30), color="g", linestyle="dashed")
+    Over_B.plot(data.index[:len(RSI)],np.full(np.shape(RSI),70), color="r", linestyle="dashed")
+    plt.subplots_adjust(hspace=0)
+    price.axes.get_xaxis().set_visible(False)
+    RSI_plot.set_ylabel("RSI("+str(x)+")",fontsize=8)
+    RSI_plot.tick_params(axis='both', which='both', length=0)
+    plt.setp(RSI_plot.get_yticklabels(), visible=False)
+    price.set_title(ticker)
