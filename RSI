@@ -39,3 +39,5 @@ def RSI(x):
     RSI_plot.tick_params(axis='both', which='both', length=0)
     plt.setp(RSI_plot.get_yticklabels(), visible=False)
     price.set_title(ticker)
+    
+    #huevoswey
